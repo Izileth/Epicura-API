@@ -6,11 +6,9 @@ import { CategoryService } from 'src/services/category.service';
 @Module({
   imports: [],
   controllers: [
-    // ... outros controllers
     CategoryController,
   ],
   providers: [
-    // ... outros providers
     CategoryService,
   ],
 })

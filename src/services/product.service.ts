@@ -1,10 +1,13 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto, UpdateProductDto } from 'src/dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-
+import { Inject } from '@nestjs/common';
 @Injectable()
 export class ProductService {
-    constructor(private prisma: PrismaService){}
+    constructor(
+        private prisma: PrismaService, 
+        @Inject('CLOUDINARY') private cloudinary: any
+    ){}
     getProduct(userId: string) {
         return this.prisma.product.findMany({
             where:{
@@ -39,6 +42,7 @@ export class ProductService {
                 userId,
                 ...dto,
                 tags: dto.tags || [], 
+                imageUrl: dto.imageUrl || null,
             },
             
         });
@@ -62,6 +66,17 @@ export class ProductService {
             } : { disconnect: true },
             categoryId: undefined // Remove o campo categoryId do DTO
         };
+
+          if (dto.imageUrl) {
+            const oldProduct = await this.prisma.product.findUnique({
+            where: { id: productId }
+            });
+            
+            if (oldProduct?.imageUrl) {
+            await this.deleteImageFromCloudinary(oldProduct.imageUrl);
+            }
+        }
+
 
         delete updateData.categoryId; // Garante a remoção do campo
 
@@ -93,5 +108,20 @@ export class ProductService {
                     id: productId,
                 },
             });
+    }
+     
+    private async deleteImageFromCloudinary(imageUrl: string) {
+    try {
+        const publicId = imageUrl
+            .split('/')
+            .pop()
+            ?.split('.')[0] || '';
+            
+        if (publicId) {
+            await this.cloudinary.uploader.destroy(publicId);
+        }
+        } catch (error) {
+        console.error('Error deleting image:', error);
+        }
     }
 }

@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 
 import { PrismaService } from 'src/prisma/prisma.service';
-
-import { CreateCategoryDto, UpdateCategoryDto } from 'src/dto';
+import { Prisma } from 'generated/prisma';
+import { CreateCategoryDto, UpdateCategoryDto, CategoryFilterDto } from 'src/dto';
 
 @Injectable()
 export class CategoryService {
@@ -27,13 +27,57 @@ export class CategoryService {
       data: dto,
     });
   }
+  async getAllCategories(filters: CategoryFilterDto) {
+    const where: Prisma.CategoryWhereInput = {};
 
-  async getAllCategories() {
-    return this.prisma.category.findMany({
+    // Filtro por nome
+    if (filters.name) {
+      where.name = {
+        contains: filters.name,
+        mode: 'insensitive',
+      };
+    }
+
+    // Filtro por data
+    if (filters.startDate || filters.endDate) {
+      where.createdAt = {
+        gte: filters.startDate ? new Date(filters.startDate) : undefined,
+        lte: filters.endDate ? new Date(filters.endDate) : undefined,
+      };
+    }
+
+    // Paginação por cursor
+    if (filters.cursor) {
+      where.id = {
+        gt: filters.cursor,
+      };
+    }
+
+    const categories = await this.prisma.category.findMany({
+      where,
+      take: filters.limit,
+      orderBy: {
+        createdAt: 'desc',
+      },
       include: {
         products: true,
       },
     });
+
+    // Determinar se há mais resultados
+ 
+     let nextCursor: string | null = null; // Corrija a tipagem aqui
+      if (categories.length === filters.limit) {
+        nextCursor = categories[categories.length - 1].id;
+      }
+
+    return {
+      data: categories,
+      pagination: {
+        nextCursor,
+        hasMore: !!nextCursor,
+      },
+    };
   }
 
   async getCategoryById(categoryId: string) {

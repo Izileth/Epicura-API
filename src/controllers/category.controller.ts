@@ -8,12 +8,13 @@ import {
   Patch,
   Post,
   UseGuards,
+  Query
 } from '@nestjs/common';
 
 import { JwtGuard } from 'src/guard';
 import { CategoryService } from 'src/services/category.service';
 
-import { CreateCategoryDto, UpdateCategoryDto } from '../dto';
+import { CreateCategoryDto, UpdateCategoryDto, CategoryFilterDto } from '../dto';
 
 @UseGuards(JwtGuard)
 @Controller('categories')
@@ -26,8 +27,10 @@ export class CategoryController {
   }
 
   @Get()
-  getAllCategories() {
-    return this.categoryService.getAllCategories();
+  async getAllCategories(
+    @Query() filters: CategoryFilterDto
+  ) {
+    return this.categoryService.getAllCategories(filters);
   }
 
   @Get(':id')

@@ -4,6 +4,10 @@ import { CreateProductDto, UpdateProductDto } from 'src/dto';
 import { JwtGuard } from 'src/guard';
 import { ProductService } from 'src/services/product.service';
 
+import { ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CloudinaryInterceptor } from 'src/interceptors/clouldnary.interdecptor';
+
 @UseGuards(JwtGuard)
 @Controller('product')
 export class ProductController {
@@ -31,7 +35,22 @@ export class ProductController {
     }
 
     @Post()
+    @UseInterceptors(
+    FileInterceptor('image', {
+        limits: { fileSize: 1024 * 1024 * 5 } // 5MB
+    }),
+    CloudinaryInterceptor
+    )
     createProduct(
+         @UploadedFile(
+            new ParseFilePipe({
+            validators: [
+                new MaxFileSizeValidator({ maxSize: 5000000 }),
+                new FileTypeValidator({ fileType: 'image/*' }),
+            ],
+            fileIsRequired: false, // Alterar para true se a imagem for obrigatória
+            })
+        ) file: Express.Multer.File,
         @GetUser('id') userId: string,
         @Body() dto: CreateProductDto,
     ){
@@ -42,6 +61,10 @@ export class ProductController {
     }
 
     @Patch(':id')
+    @UseInterceptors(
+    FileInterceptor('image'),
+    CloudinaryInterceptor
+    )
     editProductById(
         @GetUser('id') userId: string, // Alterar para string
         @Param('id') productId: string, // Remover ParseIntPipe

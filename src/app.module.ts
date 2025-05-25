@@ -8,9 +8,10 @@ import { UserService } from './services/user.service';
 import { ProductController } from './controllers/product.controller';
 import { ProductService } from './services/product.service';
 import { CategoryModule } from './modules/category/category.module';
+import { CloudinaryModule } from './modules/clouldnary/clouldnary.module';
 
 @Module({
-  imports: [AuthModule, UserModule, ProductsModule, PrismaModule, CategoryModule],
+  imports: [AuthModule, UserModule, ProductsModule, PrismaModule, CategoryModule, CloudinaryModule],
   controllers: [UserController, ProductController],
   providers: [UserService, ProductService],
 })
