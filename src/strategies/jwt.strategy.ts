@@ -7,10 +7,6 @@ import { JwtPayload } from "src/dto/jwt.dto";
 import { UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from "src/prisma/prisma.service";
 
-import { 
-  ConflictException,
-} from '@nestjs/common';
-
 @Injectable()
 export class JwtStrategy extends PassportStrategy(
   Strategy,

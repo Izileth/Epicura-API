@@ -8,7 +8,7 @@ export class EditUserDto {
 
     @IsString()
     @IsOptional()
-    fistName?: string // ERRO DE TYPO AQUI!
+    firstName?: string // ERRO DE TYPO AQUI!
     
     @IsString()
     @IsOptional()

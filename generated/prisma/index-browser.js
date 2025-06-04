@@ -122,7 +122,9 @@ exports.Prisma.UserScalarFieldEnum = {
   firstName: 'firstName',
   lastName: 'lastName',
   role: 'role',
-  isActive: 'isActive'
+  isActive: 'isActive',
+  resetToken: 'resetToken',
+  resetTokenExpires: 'resetTokenExpires'
 };
 
 exports.Prisma.ProductScalarFieldEnum = {

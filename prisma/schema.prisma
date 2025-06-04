@@ -26,7 +26,8 @@ model User {
   role      String   @default("USER")
   isActive  Boolean  @default(true)
   products  Product[]
-  
+  resetToken      String?   @unique
+  resetTokenExpires DateTime?
 }
 
 model Product {

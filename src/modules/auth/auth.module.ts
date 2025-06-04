@@ -4,12 +4,13 @@ import { AuthService } from "src/services/auth.service";
 
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-
+import { MailerModule } from "@nestjs-modules/mailer";
 import { PrismaService } from "src/prisma/prisma.service";
 import { JwtStrategy } from "src/strategies/jwt.strategy";
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }), 
+        MailerModule,
         JwtModule.registerAsync({
         imports: [ConfigModule],
         useFactory: async (config: ConfigService) => ({

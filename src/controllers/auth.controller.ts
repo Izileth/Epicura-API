@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, Res} from "@nestjs/common";
-import { AuthDto } from "src/dto";
+import { AuthDto, ResetPasswordDto, ForgotPasswordDto } from "src/dto";
 import { AuthService } from "src/services/auth.service";
 import { Response } from "express";
 
@@ -22,5 +22,14 @@ export class AuthController {
     @Post("signout")
     signout(@Res({ passthrough: true }) res: Response) {
         return this.authService.signout(res);
+    }
+    @Post('forgot-password')
+    async forgotPassword(@Body() dto: ForgotPasswordDto) {
+        return this.authService.forgotPassword(dto);
+    }
+
+    @Post('reset-password')
+    async resetPassword(@Body() dto: ResetPasswordDto) {
+        return this.authService.resetPassword(dto);
     }
 }

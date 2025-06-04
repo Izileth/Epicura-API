@@ -1086,6 +1086,8 @@ export namespace Prisma {
     lastName: string | null
     role: string | null
     isActive: boolean | null
+    resetToken: string | null
+    resetTokenExpires: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1098,6 +1100,8 @@ export namespace Prisma {
     lastName: string | null
     role: string | null
     isActive: boolean | null
+    resetToken: string | null
+    resetTokenExpires: Date | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1110,6 +1114,8 @@ export namespace Prisma {
     lastName: number
     role: number
     isActive: number
+    resetToken: number
+    resetTokenExpires: number
     _all: number
   }
 
@@ -1124,6 +1130,8 @@ export namespace Prisma {
     lastName?: true
     role?: true
     isActive?: true
+    resetToken?: true
+    resetTokenExpires?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1136,6 +1144,8 @@ export namespace Prisma {
     lastName?: true
     role?: true
     isActive?: true
+    resetToken?: true
+    resetTokenExpires?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1148,6 +1158,8 @@ export namespace Prisma {
     lastName?: true
     role?: true
     isActive?: true
+    resetToken?: true
+    resetTokenExpires?: true
     _all?: true
   }
 
@@ -1233,6 +1245,8 @@ export namespace Prisma {
     lastName: string | null
     role: string
     isActive: boolean
+    resetToken: string | null
+    resetTokenExpires: Date | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1262,6 +1276,8 @@ export namespace Prisma {
     lastName?: boolean
     role?: boolean
     isActive?: boolean
+    resetToken?: boolean
+    resetTokenExpires?: boolean
     products?: boolean | User$productsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -1278,9 +1294,11 @@ export namespace Prisma {
     lastName?: boolean
     role?: boolean
     isActive?: boolean
+    resetToken?: boolean
+    resetTokenExpires?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "email" | "hash" | "firstName" | "lastName" | "role" | "isActive", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "email" | "hash" | "firstName" | "lastName" | "role" | "isActive" | "resetToken" | "resetTokenExpires", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | User$productsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1301,6 +1319,8 @@ export namespace Prisma {
       lastName: string | null
       role: string
       isActive: boolean
+      resetToken: string | null
+      resetTokenExpires: Date | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -1703,6 +1723,8 @@ export namespace Prisma {
     readonly lastName: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'String'>
     readonly isActive: FieldRef<"User", 'Boolean'>
+    readonly resetToken: FieldRef<"User", 'String'>
+    readonly resetTokenExpires: FieldRef<"User", 'DateTime'>
   }
     
 
@@ -4231,7 +4253,9 @@ export namespace Prisma {
     firstName: 'firstName',
     lastName: 'lastName',
     role: 'role',
-    isActive: 'isActive'
+    isActive: 'isActive',
+    resetToken: 'resetToken',
+    resetTokenExpires: 'resetTokenExpires'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -4365,6 +4389,8 @@ export namespace Prisma {
     lastName?: StringNullableFilter<"User"> | string | null
     role?: StringFilter<"User"> | string
     isActive?: BoolFilter<"User"> | boolean
+    resetToken?: StringNullableFilter<"User"> | string | null
+    resetTokenExpires?: DateTimeNullableFilter<"User"> | Date | string | null
     products?: ProductListRelationFilter
   }
 
@@ -4378,12 +4404,15 @@ export namespace Prisma {
     lastName?: SortOrder
     role?: SortOrder
     isActive?: SortOrder
+    resetToken?: SortOrder
+    resetTokenExpires?: SortOrder
     products?: ProductOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     email?: string
+    resetToken?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
@@ -4394,8 +4423,9 @@ export namespace Prisma {
     lastName?: StringNullableFilter<"User"> | string | null
     role?: StringFilter<"User"> | string
     isActive?: BoolFilter<"User"> | boolean
+    resetTokenExpires?: DateTimeNullableFilter<"User"> | Date | string | null
     products?: ProductListRelationFilter
-  }, "id" | "email">
+  }, "id" | "email" | "resetToken">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -4407,6 +4437,8 @@ export namespace Prisma {
     lastName?: SortOrder
     role?: SortOrder
     isActive?: SortOrder
+    resetToken?: SortOrder
+    resetTokenExpires?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -4425,6 +4457,8 @@ export namespace Prisma {
     lastName?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: StringWithAggregatesFilter<"User"> | string
     isActive?: BoolWithAggregatesFilter<"User"> | boolean
+    resetToken?: StringNullableWithAggregatesFilter<"User"> | string | null
+    resetTokenExpires?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   }
 
   export type ProductWhereInput = {
@@ -4582,6 +4616,8 @@ export namespace Prisma {
     lastName?: string | null
     role?: string
     isActive?: boolean
+    resetToken?: string | null
+    resetTokenExpires?: Date | string | null
     products?: ProductCreateNestedManyWithoutUserInput
   }
 
@@ -4595,6 +4631,8 @@ export namespace Prisma {
     lastName?: string | null
     role?: string
     isActive?: boolean
+    resetToken?: string | null
+    resetTokenExpires?: Date | string | null
     products?: ProductUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -4607,6 +4645,8 @@ export namespace Prisma {
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     products?: ProductUpdateManyWithoutUserNestedInput
   }
 
@@ -4619,6 +4659,8 @@ export namespace Prisma {
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     products?: ProductUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -4632,6 +4674,8 @@ export namespace Prisma {
     lastName?: string | null
     role?: string
     isActive?: boolean
+    resetToken?: string | null
+    resetTokenExpires?: Date | string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -4643,6 +4687,8 @@ export namespace Prisma {
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -4654,6 +4700,8 @@ export namespace Prisma {
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProductCreateInput = {
@@ -4851,6 +4899,18 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+    isSet?: boolean
+  }
+
   export type ProductListRelationFilter = {
     every?: ProductWhereInput
     some?: ProductWhereInput
@@ -4871,6 +4931,8 @@ export namespace Prisma {
     lastName?: SortOrder
     role?: SortOrder
     isActive?: SortOrder
+    resetToken?: SortOrder
+    resetTokenExpires?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -4883,6 +4945,8 @@ export namespace Prisma {
     lastName?: SortOrder
     role?: SortOrder
     isActive?: SortOrder
+    resetToken?: SortOrder
+    resetTokenExpires?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -4895,6 +4959,8 @@ export namespace Prisma {
     lastName?: SortOrder
     role?: SortOrder
     isActive?: SortOrder
+    resetToken?: SortOrder
+    resetTokenExpires?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -4954,6 +5020,21 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+    isSet?: boolean
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -5102,6 +5183,11 @@ export namespace Prisma {
 
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+    unset?: boolean
   }
 
   export type ProductUpdateManyWithoutUserNestedInput = {
@@ -5266,6 +5352,18 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+    isSet?: boolean
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -5344,6 +5442,21 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+    isSet?: boolean
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -5473,6 +5586,8 @@ export namespace Prisma {
     lastName?: string | null
     role?: string
     isActive?: boolean
+    resetToken?: string | null
+    resetTokenExpires?: Date | string | null
   }
 
   export type UserUncheckedCreateWithoutProductsInput = {
@@ -5485,6 +5600,8 @@ export namespace Prisma {
     lastName?: string | null
     role?: string
     isActive?: boolean
+    resetToken?: string | null
+    resetTokenExpires?: Date | string | null
   }
 
   export type UserCreateOrConnectWithoutProductsInput = {
@@ -5535,6 +5652,8 @@ export namespace Prisma {
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UserUncheckedUpdateWithoutProductsInput = {
@@ -5546,6 +5665,8 @@ export namespace Prisma {
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     role?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    resetToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resetTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProductCreateWithoutCategoryInput = {

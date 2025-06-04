@@ -5,10 +5,10 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
   UseGuards,
-  Query
+  Query,
+  Put
 } from '@nestjs/common';
 
 import { JwtGuard } from 'src/guard';
@@ -38,7 +38,7 @@ export class CategoryController {
     return this.categoryService.getCategoryById(categoryId);
   }
 
-  @Patch(':id')
+  @Put(':id')
   updateCategory(
     @Param('id') categoryId: string,
     @Body() dto: UpdateCategoryDto,

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe,  Post, Put, UseGuards } from '@nestjs/common';
 import { GetUser } from 'src/decorator';
 import { CreateProductDto, UpdateProductDto } from 'src/dto';
 import { JwtGuard } from 'src/guard';
@@ -60,7 +60,7 @@ export class ProductController {
         );
     }
 
-    @Patch(':id')
+    @Put(':id')
     @UseInterceptors(
     FileInterceptor('image'),
     CloudinaryInterceptor
@@ -77,8 +77,7 @@ export class ProductController {
         );
     }
 
-
-    @HttpCode(HttpStatus.NO_CONTENT)
+ 
     @Delete(':id')
     deleteProductById(
         @GetUser('id') userId: string,

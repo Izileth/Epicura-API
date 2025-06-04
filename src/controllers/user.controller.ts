@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Req, UseGuards, Delete } from '@nestjs/common';
+import { Body, Controller, Get,  Req, UseGuards, Delete, Put } from '@nestjs/common';
 import { User } from 'generated/prisma';
 import { GetUser } from 'src/decorator';
 import { EditUserDto } from 'src/dto';
@@ -19,7 +19,7 @@ export class UserController {
         return safeUser;
     }
 
-    @Patch()
+    @Put()
     editUser(
         @GetUser('id') userId: string, 
         @Body() dto: EditUserDto
