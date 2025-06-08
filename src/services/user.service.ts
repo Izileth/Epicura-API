@@ -12,6 +12,23 @@ import {
 export class UserService {
     constructor(private prisma: PrismaService){}
 
+    async getUserById(userId: string) {
+        return this.prisma.user.findUnique({
+            where: { id: userId },
+            select: {
+                id: true,
+                email: true,
+                firstName: true,
+                lastName: true,
+                role: true,
+                isActive: true,
+                createdAt: true,
+                updatedAt: true
+                // Não selecionar hash, resetToken, etc.
+            }
+        });
+    }
+
     async editUser(
         userId: string, // Corrigido para string
         dto: EditUserDto,

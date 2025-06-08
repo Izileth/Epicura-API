@@ -12,12 +12,24 @@ import { UserService } from 'src/services/user.service';
 export class UserController {
     constructor(private userService: UserService){}
 
+
+
     @Get('me')
-    async getMe(@GetUser() user: User) {
-        // Remover campos sensíveis antes de retornar
-        const { hash,  ...safeUser } = user;
+    async getMe(@GetUser('id') userId: string) {
+        // Buscar o usuário completo do banco de dados
+        const user = await this.userService.getUserById(userId);
+        
+        if (!user) {
+            throw new Error('User not found');
+        }
+        
+        // Remover campos sensíveis
+        const {  ...safeUser } = user;
+        
         return safeUser;
     }
+
+
 
     @Put(':id')
     editUser(
