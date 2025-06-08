@@ -9,8 +9,6 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { JwtStrategy } from "src/strategies/jwt.strategy";
 @Module({
     imports: [
-        ConfigModule.forRoot({ isGlobal: true }), 
-        MailerModule,
         JwtModule.registerAsync({
         imports: [ConfigModule],
         useFactory: async (config: ConfigService) => ({
@@ -18,7 +16,9 @@ import { JwtStrategy } from "src/strategies/jwt.strategy";
             signOptions: { expiresIn: config.get<string>('JWT_EXPIRATION') }
         }),
         inject: [ConfigService]
-        })
+        }),
+        ConfigModule.forRoot({ isGlobal: true }), 
+        MailerModule,
     ],
     controllers: [AuthController],
     providers: [AuthService, PrismaService, JwtStrategy]

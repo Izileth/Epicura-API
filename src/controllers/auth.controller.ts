@@ -1,5 +1,6 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Res} from "@nestjs/common";
+import { Body, Controller, HttpCode, HttpStatus, Post, Res, ValidationPipe} from "@nestjs/common";
 import { AuthDto, ResetPasswordDto, ForgotPasswordDto } from "src/dto";
+import { UsePipes } from "@nestjs/common";
 import { AuthService } from "src/services/auth.service";
 import { Response } from "express";
 
@@ -7,9 +8,11 @@ import { Response } from "express";
 export class AuthController {
     constructor(private authService: AuthService) {}
     @HttpCode(HttpStatus.CREATED)
-    @Post("signup")
+
+    @Post('signup')
+    @UsePipes(new ValidationPipe({ whitelist: true })) // Remove campos não definidos no DTO
     signup(@Body() dto: AuthDto) {
-        return this.authService.signup(dto);
+    return this.authService.signup(dto);
     }
 
     @HttpCode(HttpStatus.ACCEPTED)

@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
 import { AuthDto, ForgotPasswordDto, ResetPasswordDto } from "src/dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import * as argon from 'argon2'
@@ -7,6 +7,8 @@ import { ConfigService } from "@nestjs/config";
 import { Response } from "express";
 import {MailerService} from "@nestjs-modules/mailer"
 import { v4 as uuidv4 } from 'uuid';
+
+
 @Injectable()
 export class AuthService {
     constructor(
@@ -18,26 +20,28 @@ export class AuthService {
 
     async signup(dto: AuthDto) {
         const hash = await argon.hash(dto.password);
-
+        
         try {
+            
             const user = await this.prisma.user.create({
-                data: {
-                    email: dto.email,
-                    hash,
-                },
-                select: {
-                    id: true,
-                    email: true,
-                    createdAt: true,
-                },
+            data: {
+                email: dto.email,
+                hash
+            },
+            select: {
+                id: true,
+                email: true,
+                createdAt: true,
+            },
             });
-
             return user;
+
         } catch (error) {
             if (error.code === "P2002") {
-                throw new ForbiddenException("Credentials Taken");
+                console.log(error);
+                throw new ForbiddenException("Email already in use");
             }
-            throw error;
+            throw new InternalServerErrorException("Erro ao criar usuário");
         }
     }
 
@@ -49,6 +53,10 @@ export class AuthService {
         });
 
         if (!user) throw new ForbiddenException("Credential Invalid!");
+         
+        if (!user || !user.isActive) { 
+            throw new UnauthorizedException("Credenciais inválidas");
+        }
 
         const pwMatches = await argon.verify(user.hash, dto.password);
         if (!pwMatches) throw new ForbiddenException("Credential Incorrect!");
@@ -69,7 +77,20 @@ export class AuthService {
             path: "/",
         });
 
-        return { access_token: token };
+        return { 
+            access_token: token,
+            data: {
+                id: user.id,
+                email: user.email,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                role: user.role,
+                isActive: user.isActive,
+
+            }
+         };
     }
 
     signout(res: Response) {

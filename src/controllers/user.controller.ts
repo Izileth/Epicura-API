@@ -15,19 +15,22 @@ export class UserController {
     @Get('me')
     async getMe(@GetUser() user: User) {
         // Remover campos sensíveis antes de retornar
-        const { hash, role, isActive, ...safeUser } = user;
+        const { hash,  ...safeUser } = user;
         return safeUser;
     }
 
-    @Put()
+    @Put(':id')
     editUser(
         @GetUser('id') userId: string, 
         @Body() dto: EditUserDto
     ) {
-        return this.userService.editUser(userId, dto);
+        return this.userService.editUser(
+            userId, 
+            dto
+        );
     }
 
-    @Delete()
+    @Delete(':id')
     deleteUser(
         @GetUser('id') userId: string
     ) {

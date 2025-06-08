@@ -4412,7 +4412,6 @@ export namespace Prisma {
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     email?: string
-    resetToken?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
@@ -4423,9 +4422,10 @@ export namespace Prisma {
     lastName?: StringNullableFilter<"User"> | string | null
     role?: StringFilter<"User"> | string
     isActive?: BoolFilter<"User"> | boolean
+    resetToken?: StringNullableFilter<"User"> | string | null
     resetTokenExpires?: DateTimeNullableFilter<"User"> | Date | string | null
     products?: ProductListRelationFilter
-  }, "id" | "email" | "resetToken">
+  }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder

@@ -13,8 +13,9 @@ async function bootstrap() {
 
   app.use(cookieParser());
   app.enableCors({
-    origin: true, 
+    origin: 'http://localhost:3131', // URL exata do frontend
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'], // Headers permitidos
   });
 
   await app.listen(process.env.PORT ?? 4141);
