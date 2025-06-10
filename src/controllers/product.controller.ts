@@ -13,25 +13,36 @@ import { CloudinaryInterceptor } from 'src/interceptors/clouldnary.interdecptor'
 export class ProductController {
 
     constructor(private productService: ProductService) {}
+    @Get('all')
+    getAllProducts() {
+        return this.productService.getAllProducts();
+    }
+
     @Get()
     getProduct(
         @GetUser('id') userId: string,
     ){
+        console.log('Fetching products for user:', userId); // Para debug
         return this.productService.getProduct(
             userId,
         );
     }
-
     
     @Get(':id')
-    getProductById(
+    async getProductById(
         @GetUser('id') userId: string,
-        @Param('id', ParseIntPipe) productId: string,
+        @Param('id') productId: string, 
     ){
-        return this.productService.getProductById(
-            userId,
-            productId,
-        );
+        console.log('Controller - Getting product by ID:', { userId, productId }); // Debug
+        
+        try {
+            const product = await this.productService.getProductById(userId, productId);
+            console.log('Controller - Product found:', product ? 'Yes' : 'No'); // Debug
+            return product;
+        } catch (error) {
+            console.error('Controller - Error getting product:', error.message);
+            throw error;
+        }
     }
 
     @Post()

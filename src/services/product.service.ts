@@ -8,22 +8,85 @@ export class ProductService {
         private prisma: PrismaService, 
         @Inject('CLOUDINARY') private cloudinary: any
     ){}
+        
+    getAllProducts() {
+        return this.prisma.product.findMany({
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        firstName: true,
+                        lastName: true,
+                        email: true,
+                        role: true,
+                        isActive: true,
+                        createdAt: true,
+                        updatedAt: true
+                    }
+                },
+                category: true // Inclui informações da categoria
+            },
+            orderBy: {
+                createdAt: 'desc' // Ordena por data de criação (opcional)
+            }
+        });
+    }
     getProduct(userId: string) {
         return this.prisma.product.findMany({
             where:{
                 userId,
+            },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        firstName: true,
+                        lastName: true,
+                        email: true,
+                        role: true,
+                        isActive: true,
+                        createdAt: true,
+                        updatedAt: true
+                        // Excluindo: hash, resetToken, resetTokenExpires
+                    }
+                },
+                category: true
             }
         })
     }
-  
-    getProductById(userId: string,productId: string) {
-        return this.prisma.product.findFirst({
+
+    async getProductById(userId: string, productId: string) {
+        console.log('Searching for product:', { userId, productId }); // Debug
+        
+        const product = await this.prisma.product.findUnique({
             where:{
-                id: productId,
-                userId,
+                id: productId, // Remove a restrição de userId
+            },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        firstName: true,
+                        lastName: true,
+                        email: true,
+                        role: true,
+                        isActive: true,
+                        createdAt: true,
+                        updatedAt: true
+                    }
+                },
+                category: true
             }
-        })
+        });
+
+        if (!product) {
+            throw new NotFoundException('Product not found');
+        }
+
+        return product;
     }
+
+
     
     
     async createProduct(
