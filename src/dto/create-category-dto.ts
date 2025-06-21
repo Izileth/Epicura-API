@@ -1,9 +1,13 @@
 // src/dto/category.dto.ts
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsUrl } from 'class-validator';
 
 export class CreateCategoryDto {
   @IsString()
   @IsNotEmpty()
   name: string;
-}
 
+  @IsString()
+  @IsOptional()
+  @IsUrl({}, { message: 'imageUrl deve ser uma URL válida' })
+  imageUrl?: string;
+}

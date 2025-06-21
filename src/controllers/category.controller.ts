@@ -8,12 +8,12 @@ import {
   Post,
   UseGuards,
   Query,
-  Put
+  Put,
 } from '@nestjs/common';
 
 import { JwtGuard } from 'src/guard';
 import { CategoryService } from 'src/services/category.service';
-
+import { Public } from 'src/decorator/get-public-decorator';
 import { CreateCategoryDto, UpdateCategoryDto, CategoryFilterDto } from '../dto';
 
 @UseGuards(JwtGuard)
@@ -26,6 +26,7 @@ export class CategoryController {
     return this.categoryService.createCategory(dto);
   }
 
+  @Public()
   @Get()
   async getAllCategories(
     @Query() filters: CategoryFilterDto
@@ -33,6 +34,7 @@ export class CategoryController {
     return this.categoryService.getAllCategories(filters);
   }
 
+  @Public()
   @Get(':id')
   getCategoryById(@Param('id') categoryId: string) {
     return this.categoryService.getCategoryById(categoryId);

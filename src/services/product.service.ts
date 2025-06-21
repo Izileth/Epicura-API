@@ -106,6 +106,8 @@ export class ProductService {
                 ...dto,
                 tags: dto.tags || [], 
                 imageUrl: dto.imageUrl || null,
+                categoryId: dto.categoryId || undefined // Convertendo string vazia para undefined
+
             },
             
         });

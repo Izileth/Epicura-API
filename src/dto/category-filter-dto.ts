@@ -20,4 +20,16 @@ export class CategoryFilterDto {
   @IsString()
   @IsOptional()
   cursor?: string; // Último ID recebido
+
+  @IsString()
+  @IsOptional()
+  search?: string;
+
+  @IsString()
+  @IsOptional()
+  sortBy?: 'name' | 'createdAt' | 'productCount';
+
+  @IsString()
+  @IsOptional()
+  sortOrder?: 'asc' | 'desc';
 }

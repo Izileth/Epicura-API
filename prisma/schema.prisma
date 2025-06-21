@@ -49,9 +49,11 @@ model Product {
   @@index([title])
 }
 
+
 model Category {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String   @unique
+  imageUrl  String?  // Novo campo adicionado
   products  Product[]
   createdAt DateTime @default(now()) @map("createdAt")
   updatedAt DateTime @updatedAt @map("updatedAt")
