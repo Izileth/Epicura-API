@@ -5,9 +5,10 @@ import * as argon from 'argon2'
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { Response } from "express";
-import {MailerService} from "@nestjs-modules/mailer"
-import { v4 as uuidv4 } from 'uuid';
 
+import { ResendService } from "./resend.service";
+
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,8 @@ export class AuthService {
         private prisma: PrismaService,
         private jwt: JwtService,
         private config: ConfigService,
-        private mailerService: MailerService,
+        //private mailerService: MailerService,
+        private readonly resendService: ResendService,
     ) {}
 
     async signup(dto: AuthDto) {
@@ -97,20 +99,18 @@ export class AuthService {
         res.clearCookie("access_token");
         return { message: "Logout realizado com sucesso" };
     }
-
+     
     async forgotPassword(dto: ForgotPasswordDto) {
         const user = await this.prisma.user.findUnique({
         where: { email: dto.email },
         });
 
         if (!user) {
-        // Não revele que o email não existe por questões de segurança
         return { message: 'Se o email existir, um link de recuperação será enviado' };
         }
 
-        // Gerar token e expiração
         const resetToken = uuidv4();
-        const resetTokenExpires = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2 horas em milissegundo
+        const resetTokenExpires = new Date(Date.now() + 2 * 60 * 60 * 1000);
 
         await this.prisma.user.update({
         where: { id: user.id },
@@ -119,46 +119,76 @@ export class AuthService {
             resetTokenExpires,
         },
         });
-          
-        await this.mailerService.sendMail({
-        to: user.email,
-        subject: 'Recuperação de Senha',
-        template: 'forgot-password', // Crie este template
-        context: {
-            name: user.firstName || 'Usuário',
-            resetLink: `${this.config.get('FRONTEND_URL')}/reset-password?token=${resetToken}`,
-        },
-        });
+
+        const resetLink = `${this.config.get('FRONTEND_URL')}/reset-password?token=${resetToken}`;
+        
+        await this.resendService.sendPasswordResetEmail(
+        user.email,
+        user.firstName || 'Usuário',
+        resetLink
+        );
 
         return { message: 'Link de recuperação enviado para seu email' };
-    }    
+    }
 
     async resetPassword(dto: ResetPasswordDto) {
-        const user = await this.prisma.user.findFirst({
-        where: {
-            resetToken: dto.token,
-            resetTokenExpires: { gt: new Date() }, // Token ainda não expirou
-        },
-        });
+        const whereCondition = dto.token
+            ? { resetToken: dto.token, resetTokenExpires: { gt: new Date() } }
+            : { resetCode: dto.code, resetCodeExpires: { gt: new Date() } };
 
-        if (!user) {
-        throw new NotFoundException('Token inválido ou expirado');
-        }
+        const user = await this.prisma.user.findFirst({ where: whereCondition });
+
+        if (!user) throw new NotFoundException('Token/código inválido ou expirado');
 
         const hash = await argon.hash(dto.newPassword);
 
         await this.prisma.user.update({
-        where: { id: user.id },
-        data: {
+            where: { id: user.id },
+            data: {
             hash,
             resetToken: null,
             resetTokenExpires: null,
-        },
+            resetCode: null,
+            resetCodeExpires: null,
+            },
         });
 
-        return { message: 'Senha alterada com sucesso' };
+        return { message: 'Senha redefinida com sucesso' };
     }
+      
+    async generatePasswordResetToken(email: string) {
+        const user = await this.prisma.user.findUnique({ where: { email } });
+        if (!user) throw new NotFoundException('Usuário não encontrado');
 
+        const resetToken = uuidv4();
+        const resetTokenExpires = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2 horas
 
+        await this.prisma.user.update({
+        where: { id: user.id },
+        data: { resetToken, resetTokenExpires },
+        });
 
+        return { token: resetToken };
+    }
+     // Método alternativo com código numérico (opcional)
+
+    async generateResetCode(email: string) {
+        const user = await this.prisma.user.findUnique({ where: { email } });
+        if (!user) throw new NotFoundException('Usuário não encontrado');
+
+        const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+        const resetCodeExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutos
+
+        await this.prisma.user.update({
+            where: { id: user.id },
+            data: { 
+            resetCode,
+            resetCodeExpires,
+            resetToken: null, // Limpa token anterior
+            resetTokenExpires: null 
+            },
+        });
+
+        return { code: resetCode };
+    }
 }

@@ -28,6 +28,12 @@ model User {
   products  Product[]
   resetToken      String?   
   resetTokenExpires DateTime?
+  resetCode       String?   @db.String()
+  resetCodeExpires DateTime?
+
+  carts     Cart[]    // Relação inversa para Cart
+  orders    Order[]   // Relação inversa para Order
+  
 }
 
 model Product {
@@ -45,6 +51,9 @@ model Product {
   isAvailable Boolean  @default(true)
   userId    String  @db.ObjectId // Deve ser do mesmo tipo que User.id
   user      User    @relation(fields: [userId], references: [id]) // Referência direta ao campo
+  
+  orderItems  OrderItem[]  // Relação inversa para OrderItem
+  cartItems   CartItem[]   // Relação inversa para CartItem
 
   @@index([title])
 }
@@ -57,4 +66,74 @@ model Category {
   products  Product[]
   createdAt DateTime @default(now()) @map("createdAt")
   updatedAt DateTime @updatedAt @map("updatedAt")
+}
+
+model Cart {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime    @default(now()) @map("createdAt")
+  updatedAt   DateTime    @updatedAt @map("updatedAt")
+  userId      String      @db.ObjectId
+  user        User        @relation(fields: [userId], references: [id])
+  items       CartItem[]  @relation("CartToItems")
+  isActive    Boolean     @default(true)
+  sessionId   String?      // Para carrinhos não autenticados
+  expiresAt   DateTime?   @db.Date // Para limpeza automática de carrinhos abandonados
+
+  @@index([userId])
+  @@index([sessionId])
+  @@index([expiresAt])
+}
+
+model CartItem {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  cartId      String    @db.ObjectId
+  cart        Cart      @relation(fields: [cartId], references: [id], name: "CartToItems")
+  productId   String    @db.ObjectId
+  product     Product   @relation(fields: [productId], references: [id])
+  quantity    Int       @default(1) 
+  priceAtAdd  Int       // Preço no momento da adição (em centavos)
+  addedAt     DateTime  @default(now())
+  notes       String?   // Para observações especiais do item
+
+  @@index([cartId])
+  @@index([productId])
+  @@unique([cartId, productId]) // Evita duplicatas
+}
+
+model Order {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime     @default(now()) @map("createdAt")
+  updatedAt   DateTime     @updatedAt @map("updatedAt")
+  userId      String       @db.ObjectId
+  user        User         @relation(fields: [userId], references: [id])
+  items       OrderItem[]  @relation("OrderToItems")
+  status      OrderStatus  @default(PENDING)
+  total       Int          // Em centavos
+  paymentId   String?      @unique
+  deliveryAddress  Json?   // Estrutura flexível para endereço
+  contactInfo Json?        // Telefone, email alternativo, etc.
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  orderId     String    @db.ObjectId
+  order       Order     @relation(fields: [orderId], references: [id], name: "OrderToItems")
+  productId   String    @db.ObjectId
+  product     Product   @relation(fields: [productId], references: [id])
+  quantity    Int       
+  price       Int       // Preço no momento da compra (em centavos)
+  name        String    // Nome do produto no momento da compra (cópia)
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
 }

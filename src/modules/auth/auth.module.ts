@@ -4,7 +4,7 @@ import { AuthService } from "src/services/auth.service";
 
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { MailerModule } from "@nestjs-modules/mailer";
+import { ResendModule } from "../resend/resend.module";
 import { PrismaService } from "src/prisma/prisma.service";
 import { JwtStrategy } from "src/strategies/jwt.strategy";
 @Module({
@@ -18,9 +18,11 @@ import { JwtStrategy } from "src/strategies/jwt.strategy";
         inject: [ConfigService]
         }),
         ConfigModule.forRoot({ isGlobal: true }), 
-        MailerModule,
+        ResendModule
     ],
-    controllers: [AuthController],
+    controllers: [
+        AuthController,
+    ],
     providers: [AuthService, PrismaService, JwtStrategy]
 })
 export class AuthModule {}

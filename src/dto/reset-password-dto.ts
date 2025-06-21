@@ -1,12 +1,16 @@
-import { IsString, IsNotEmpty, MinLength } from 'class-validator';
+import { IsString, IsNotEmpty, MinLength, ValidateIf, Length } from 'class-validator';
 
 export class ResetPasswordDto {
+  @ValidateIf(o => !o.code) // Valida apenas se 'code' não estiver presente
   @IsString()
-  @IsNotEmpty()
-  token: string;
+  token?: string;
+
+  @ValidateIf(o => !o.token) // Valida apenas se 'token' não estiver presente
+  @IsString()
+  @Length(6, 6)
+  code?: string;
 
   @IsString()
-  @IsNotEmpty()
   @MinLength(8)
   newPassword: string;
 }

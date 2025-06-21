@@ -124,7 +124,9 @@ exports.Prisma.UserScalarFieldEnum = {
   role: 'role',
   isActive: 'isActive',
   resetToken: 'resetToken',
-  resetTokenExpires: 'resetTokenExpires'
+  resetTokenExpires: 'resetTokenExpires',
+  resetCode: 'resetCode',
+  resetCodeExpires: 'resetCodeExpires'
 };
 
 exports.Prisma.ProductScalarFieldEnum = {
@@ -150,6 +152,47 @@ exports.Prisma.CategoryScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CartScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId',
+  isActive: 'isActive',
+  sessionId: 'sessionId',
+  expiresAt: 'expiresAt'
+};
+
+exports.Prisma.CartItemScalarFieldEnum = {
+  id: 'id',
+  cartId: 'cartId',
+  productId: 'productId',
+  quantity: 'quantity',
+  priceAtAdd: 'priceAtAdd',
+  addedAt: 'addedAt',
+  notes: 'notes'
+};
+
+exports.Prisma.OrderScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId',
+  status: 'status',
+  total: 'total',
+  paymentId: 'paymentId',
+  deliveryAddress: 'deliveryAddress',
+  contactInfo: 'contactInfo'
+};
+
+exports.Prisma.OrderItemScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  productId: 'productId',
+  quantity: 'quantity',
+  price: 'price',
+  name: 'name'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -159,12 +202,23 @@ exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
 };
-
+exports.OrderStatus = exports.$Enums.OrderStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  SHIPPED: 'SHIPPED',
+  DELIVERED: 'DELIVERED',
+  CANCELLED: 'CANCELLED',
+  REFUNDED: 'REFUNDED'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
   Product: 'Product',
-  Category: 'Category'
+  Category: 'Category',
+  Cart: 'Cart',
+  CartItem: 'CartItem',
+  Order: 'Order',
+  OrderItem: 'OrderItem'
 };
 
 /**
