@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException, InternalServerErrorException, UnauthorizedException , Req, Res } from "@nestjs/common";
 import { AuthDto, ForgotPasswordDto, ResetPasswordDto } from "src/dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import * as argon from 'argon2'
@@ -10,6 +10,8 @@ import { ResendService } from "./resend.service";
 
 import { v4 as uuidv4 } from 'uuid';
 
+import { RequestWithCookies } from "src/interfaces/request.interface";
+import { RefreshTokenDto } from "src/dto/refresh.token-dto";
 @Injectable()
 export class AuthService {
     constructor(
@@ -49,38 +51,38 @@ export class AuthService {
 
     async signin(dto: AuthDto, res: Response) {
         const user = await this.prisma.user.findUnique({
-            where: {
-                email: dto.email,
-            },
+            where: { email: dto.email },
         });
 
-        if (!user) throw new ForbiddenException("Credential Invalid!");
-         
-        if (!user || !user.isActive) { 
+        if (!user || !user.isActive) {
             throw new UnauthorizedException("Credenciais inválidas");
         }
+        
+        if (!user) throw new ForbiddenException("Credential Invalid!");
 
         const pwMatches = await argon.verify(user.hash, dto.password);
-        if (!pwMatches) throw new ForbiddenException("Credential Incorrect!");
-
-        const token = await this.jwt.signAsync(
-            { sub: user.id, email: user.email },
-            {
-                expiresIn: this.config.get("JWT_EXPIRATION"),
-                secret: this.config.get("JWT_SECRET"),
-            }
-        );
-
-        res.cookie("access_token", token, {
+        if (!pwMatches) throw new ForbiddenException("Credencial Incorreta!");
+   
+        const { accessToken, refreshToken } = await this.generateTokens(user.id, user.email);
+          
+        res.cookie("access_token", accessToken, {
             httpOnly: true,
             secure: this.config.get("NODE_ENV") === "production",
             sameSite: "strict",
-            maxAge: 3600 * 1000, // 1 hora
+            maxAge: 15 * 60 * 1000, // 15 minutos (access token)
             path: "/",
+        });
+        res.cookie("refresh_token", refreshToken, {
+            httpOnly: true,
+            secure: this.config.get("NODE_ENV") === "production",
+            sameSite: "strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias (refresh token)
+            path: "/auth/refresh", // Restringe a rota que pode usar o cookie
         });
 
         return { 
-            access_token: token,
+            access_token: accessToken,
+            refresh_token: refreshToken,
             data: {
                 id: user.id,
                 email: user.email,
@@ -95,11 +97,12 @@ export class AuthService {
          };
     }
 
-    signout(res: Response) {
+    async signout(res: Response) {
         res.clearCookie("access_token");
+        res.clearCookie("refresh_token");
         return { message: "Logout realizado com sucesso" };
     }
-     
+
     async forgotPassword(dto: ForgotPasswordDto) {
         const user = await this.prisma.user.findUnique({
         where: { email: dto.email },
@@ -170,7 +173,6 @@ export class AuthService {
 
         return { token: resetToken };
     }
-     // Método alternativo com código numérico (opcional)
 
     async generateResetCode(email: string) {
         const user = await this.prisma.user.findUnique({ where: { email } });
@@ -190,5 +192,81 @@ export class AuthService {
         });
 
         return { code: resetCode };
+    }
+
+    private async generateTokens(userId: string, email: string) {
+        const [accessToken, refreshToken] = await Promise.all([
+        this.jwt.signAsync(
+            { sub: userId, email },
+            {
+            secret: this.config.get('JWT_SECRET'),
+            expiresIn: '15m', // Access token curto
+            },
+        ),
+        this.jwt.signAsync(
+            { sub: userId },
+            {
+            secret: this.config.get('JWT_REFRESH_SECRET'),
+            expiresIn: '7d', // Refresh token longo
+            },
+        ),
+        ]);
+
+        // Salva o refresh token no banco
+        await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+            refreshToken,
+            refreshTokenExp: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        },
+        });
+
+        return { accessToken, refreshToken };
+    }
+
+    async refreshTokens(
+    req: RequestWithCookies,
+    res: Response,
+    body: RefreshTokenDto
+    ) {
+    const refreshToken = req.cookies?.refresh_token || body.refreshToken;
+    
+    if (!refreshToken) {
+        throw new ForbiddenException('Refresh token não encontrado');
+    }
+
+    const payload = await this.jwt.verifyAsync(refreshToken, {
+        secret: this.config.get('JWT_REFRESH_SECRET'),
+    });
+
+    const user = await this.prisma.user.findFirst({
+        where: { 
+        id: payload.sub,
+        refreshToken,
+        refreshTokenExp: { gt: new Date() }
+        },
+    });
+
+    if (!user) {
+        throw new ForbiddenException('Refresh token inválido');
+    }
+
+    const { accessToken, refreshToken: newRefreshToken } = await this.generateTokens(user.id, user.email);
+
+    // Atualiza cookies
+    res.cookie('access_token', accessToken, { 
+        httpOnly: true,
+        secure: this.config.get('NODE_ENV') === 'production',
+        maxAge: 15 * 60 * 1000, // 15 minutos
+    });
+
+    res.cookie('refresh_token', newRefreshToken, {
+        httpOnly: true,
+        secure: this.config.get('NODE_ENV') === 'production',
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
+        path: '/auth/refresh',
+    });
+
+    return { access_token: accessToken };
     }
 }

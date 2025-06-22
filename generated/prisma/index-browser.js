@@ -126,7 +126,9 @@ exports.Prisma.UserScalarFieldEnum = {
   resetToken: 'resetToken',
   resetTokenExpires: 'resetTokenExpires',
   resetCode: 'resetCode',
-  resetCodeExpires: 'resetCodeExpires'
+  resetCodeExpires: 'resetCodeExpires',
+  refreshToken: 'refreshToken',
+  refreshTokenExp: 'refreshTokenExp'
 };
 
 exports.Prisma.ProductScalarFieldEnum = {

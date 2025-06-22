@@ -1595,6 +1595,8 @@ export namespace Prisma {
     resetTokenExpires: Date | null
     resetCode: string | null
     resetCodeExpires: Date | null
+    refreshToken: string | null
+    refreshTokenExp: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1611,6 +1613,8 @@ export namespace Prisma {
     resetTokenExpires: Date | null
     resetCode: string | null
     resetCodeExpires: Date | null
+    refreshToken: string | null
+    refreshTokenExp: Date | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1627,6 +1631,8 @@ export namespace Prisma {
     resetTokenExpires: number
     resetCode: number
     resetCodeExpires: number
+    refreshToken: number
+    refreshTokenExp: number
     _all: number
   }
 
@@ -1645,6 +1651,8 @@ export namespace Prisma {
     resetTokenExpires?: true
     resetCode?: true
     resetCodeExpires?: true
+    refreshToken?: true
+    refreshTokenExp?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1661,6 +1669,8 @@ export namespace Prisma {
     resetTokenExpires?: true
     resetCode?: true
     resetCodeExpires?: true
+    refreshToken?: true
+    refreshTokenExp?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1677,6 +1687,8 @@ export namespace Prisma {
     resetTokenExpires?: true
     resetCode?: true
     resetCodeExpires?: true
+    refreshToken?: true
+    refreshTokenExp?: true
     _all?: true
   }
 
@@ -1766,6 +1778,8 @@ export namespace Prisma {
     resetTokenExpires: Date | null
     resetCode: string | null
     resetCodeExpires: Date | null
+    refreshToken: string | null
+    refreshTokenExp: Date | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1799,6 +1813,8 @@ export namespace Prisma {
     resetTokenExpires?: boolean
     resetCode?: boolean
     resetCodeExpires?: boolean
+    refreshToken?: boolean
+    refreshTokenExp?: boolean
     products?: boolean | User$productsArgs<ExtArgs>
     carts?: boolean | User$cartsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -1821,9 +1837,11 @@ export namespace Prisma {
     resetTokenExpires?: boolean
     resetCode?: boolean
     resetCodeExpires?: boolean
+    refreshToken?: boolean
+    refreshTokenExp?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "email" | "hash" | "firstName" | "lastName" | "role" | "isActive" | "resetToken" | "resetTokenExpires" | "resetCode" | "resetCodeExpires", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "email" | "hash" | "firstName" | "lastName" | "role" | "isActive" | "resetToken" | "resetTokenExpires" | "resetCode" | "resetCodeExpires" | "refreshToken" | "refreshTokenExp", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | User$productsArgs<ExtArgs>
     carts?: boolean | User$cartsArgs<ExtArgs>
@@ -1852,6 +1870,8 @@ export namespace Prisma {
       resetTokenExpires: Date | null
       resetCode: string | null
       resetCodeExpires: Date | null
+      refreshToken: string | null
+      refreshTokenExp: Date | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -2260,6 +2280,8 @@ export namespace Prisma {
     readonly resetTokenExpires: FieldRef<"User", 'DateTime'>
     readonly resetCode: FieldRef<"User", 'String'>
     readonly resetCodeExpires: FieldRef<"User", 'DateTime'>
+    readonly refreshToken: FieldRef<"User", 'String'>
+    readonly refreshTokenExp: FieldRef<"User", 'DateTime'>
   }
     
 
@@ -9094,7 +9116,9 @@ export namespace Prisma {
     resetToken: 'resetToken',
     resetTokenExpires: 'resetTokenExpires',
     resetCode: 'resetCode',
-    resetCodeExpires: 'resetCodeExpires'
+    resetCodeExpires: 'resetCodeExpires',
+    refreshToken: 'refreshToken',
+    refreshTokenExp: 'refreshTokenExp'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -9307,6 +9331,8 @@ export namespace Prisma {
     resetTokenExpires?: DateTimeNullableFilter<"User"> | Date | string | null
     resetCode?: StringNullableFilter<"User"> | string | null
     resetCodeExpires?: DateTimeNullableFilter<"User"> | Date | string | null
+    refreshToken?: StringNullableFilter<"User"> | string | null
+    refreshTokenExp?: DateTimeNullableFilter<"User"> | Date | string | null
     products?: ProductListRelationFilter
     carts?: CartListRelationFilter
     orders?: OrderListRelationFilter
@@ -9326,6 +9352,8 @@ export namespace Prisma {
     resetTokenExpires?: SortOrder
     resetCode?: SortOrder
     resetCodeExpires?: SortOrder
+    refreshToken?: SortOrder
+    refreshTokenExp?: SortOrder
     products?: ProductOrderByRelationAggregateInput
     carts?: CartOrderByRelationAggregateInput
     orders?: OrderOrderByRelationAggregateInput
@@ -9348,6 +9376,8 @@ export namespace Prisma {
     resetTokenExpires?: DateTimeNullableFilter<"User"> | Date | string | null
     resetCode?: StringNullableFilter<"User"> | string | null
     resetCodeExpires?: DateTimeNullableFilter<"User"> | Date | string | null
+    refreshToken?: StringNullableFilter<"User"> | string | null
+    refreshTokenExp?: DateTimeNullableFilter<"User"> | Date | string | null
     products?: ProductListRelationFilter
     carts?: CartListRelationFilter
     orders?: OrderListRelationFilter
@@ -9367,6 +9397,8 @@ export namespace Prisma {
     resetTokenExpires?: SortOrder
     resetCode?: SortOrder
     resetCodeExpires?: SortOrder
+    refreshToken?: SortOrder
+    refreshTokenExp?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -9389,6 +9421,8 @@ export namespace Prisma {
     resetTokenExpires?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     resetCode?: StringNullableWithAggregatesFilter<"User"> | string | null
     resetCodeExpires?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    refreshToken?: StringNullableWithAggregatesFilter<"User"> | string | null
+    refreshTokenExp?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   }
 
   export type ProductWhereInput = {
@@ -9845,6 +9879,8 @@ export namespace Prisma {
     resetTokenExpires?: Date | string | null
     resetCode?: string | null
     resetCodeExpires?: Date | string | null
+    refreshToken?: string | null
+    refreshTokenExp?: Date | string | null
     products?: ProductCreateNestedManyWithoutUserInput
     carts?: CartCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
@@ -9864,6 +9900,8 @@ export namespace Prisma {
     resetTokenExpires?: Date | string | null
     resetCode?: string | null
     resetCodeExpires?: Date | string | null
+    refreshToken?: string | null
+    refreshTokenExp?: Date | string | null
     products?: ProductUncheckedCreateNestedManyWithoutUserInput
     carts?: CartUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
@@ -9882,6 +9920,8 @@ export namespace Prisma {
     resetTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetCode?: NullableStringFieldUpdateOperationsInput | string | null
     resetCodeExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     products?: ProductUpdateManyWithoutUserNestedInput
     carts?: CartUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
@@ -9900,6 +9940,8 @@ export namespace Prisma {
     resetTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetCode?: NullableStringFieldUpdateOperationsInput | string | null
     resetCodeExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     products?: ProductUncheckedUpdateManyWithoutUserNestedInput
     carts?: CartUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
@@ -9919,6 +9961,8 @@ export namespace Prisma {
     resetTokenExpires?: Date | string | null
     resetCode?: string | null
     resetCodeExpires?: Date | string | null
+    refreshToken?: string | null
+    refreshTokenExp?: Date | string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -9934,6 +9978,8 @@ export namespace Prisma {
     resetTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetCode?: NullableStringFieldUpdateOperationsInput | string | null
     resetCodeExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -9949,6 +9995,8 @@ export namespace Prisma {
     resetTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetCode?: NullableStringFieldUpdateOperationsInput | string | null
     resetCodeExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProductCreateInput = {
@@ -10490,6 +10538,8 @@ export namespace Prisma {
     resetTokenExpires?: SortOrder
     resetCode?: SortOrder
     resetCodeExpires?: SortOrder
+    refreshToken?: SortOrder
+    refreshTokenExp?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -10506,6 +10556,8 @@ export namespace Prisma {
     resetTokenExpires?: SortOrder
     resetCode?: SortOrder
     resetCodeExpires?: SortOrder
+    refreshToken?: SortOrder
+    refreshTokenExp?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -10522,6 +10574,8 @@ export namespace Prisma {
     resetTokenExpires?: SortOrder
     resetCode?: SortOrder
     resetCodeExpires?: SortOrder
+    refreshToken?: SortOrder
+    refreshTokenExp?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -11882,6 +11936,8 @@ export namespace Prisma {
     resetTokenExpires?: Date | string | null
     resetCode?: string | null
     resetCodeExpires?: Date | string | null
+    refreshToken?: string | null
+    refreshTokenExp?: Date | string | null
     carts?: CartCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
   }
@@ -11900,6 +11956,8 @@ export namespace Prisma {
     resetTokenExpires?: Date | string | null
     resetCode?: string | null
     resetCodeExpires?: Date | string | null
+    refreshToken?: string | null
+    refreshTokenExp?: Date | string | null
     carts?: CartUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
   }
@@ -12010,6 +12068,8 @@ export namespace Prisma {
     resetTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetCode?: NullableStringFieldUpdateOperationsInput | string | null
     resetCodeExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     carts?: CartUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
   }
@@ -12027,6 +12087,8 @@ export namespace Prisma {
     resetTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetCode?: NullableStringFieldUpdateOperationsInput | string | null
     resetCodeExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     carts?: CartUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -12159,6 +12221,8 @@ export namespace Prisma {
     resetTokenExpires?: Date | string | null
     resetCode?: string | null
     resetCodeExpires?: Date | string | null
+    refreshToken?: string | null
+    refreshTokenExp?: Date | string | null
     products?: ProductCreateNestedManyWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
   }
@@ -12177,6 +12241,8 @@ export namespace Prisma {
     resetTokenExpires?: Date | string | null
     resetCode?: string | null
     resetCodeExpires?: Date | string | null
+    refreshToken?: string | null
+    refreshTokenExp?: Date | string | null
     products?: ProductUncheckedCreateNestedManyWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
   }
@@ -12237,6 +12303,8 @@ export namespace Prisma {
     resetTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetCode?: NullableStringFieldUpdateOperationsInput | string | null
     resetCodeExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     products?: ProductUpdateManyWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
   }
@@ -12254,6 +12322,8 @@ export namespace Prisma {
     resetTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetCode?: NullableStringFieldUpdateOperationsInput | string | null
     resetCodeExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     products?: ProductUncheckedUpdateManyWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -12420,6 +12490,8 @@ export namespace Prisma {
     resetTokenExpires?: Date | string | null
     resetCode?: string | null
     resetCodeExpires?: Date | string | null
+    refreshToken?: string | null
+    refreshTokenExp?: Date | string | null
     products?: ProductCreateNestedManyWithoutUserInput
     carts?: CartCreateNestedManyWithoutUserInput
   }
@@ -12438,6 +12510,8 @@ export namespace Prisma {
     resetTokenExpires?: Date | string | null
     resetCode?: string | null
     resetCodeExpires?: Date | string | null
+    refreshToken?: string | null
+    refreshTokenExp?: Date | string | null
     products?: ProductUncheckedCreateNestedManyWithoutUserInput
     carts?: CartUncheckedCreateNestedManyWithoutUserInput
   }
@@ -12496,6 +12570,8 @@ export namespace Prisma {
     resetTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetCode?: NullableStringFieldUpdateOperationsInput | string | null
     resetCodeExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     products?: ProductUpdateManyWithoutUserNestedInput
     carts?: CartUpdateManyWithoutUserNestedInput
   }
@@ -12513,6 +12589,8 @@ export namespace Prisma {
     resetTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resetCode?: NullableStringFieldUpdateOperationsInput | string | null
     resetCodeExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     products?: ProductUncheckedUpdateManyWithoutUserNestedInput
     carts?: CartUncheckedUpdateManyWithoutUserNestedInput
   }

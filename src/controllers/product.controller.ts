@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe,  Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe,  Post, Put, UseGuards, } from '@nestjs/common';
 import { GetUser } from 'src/decorator';
 import { CreateProductDto, UpdateProductDto } from 'src/dto';
 import { JwtGuard } from 'src/guard';
@@ -7,17 +7,20 @@ import { ProductService } from 'src/services/product.service';
 import { ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryInterceptor } from 'src/interceptors/clouldnary.interdecptor';
-
+import { Public } from 'src/decorator/get-public-decorator';
 @UseGuards(JwtGuard)
 @Controller('product')
 export class ProductController {
 
     constructor(private productService: ProductService) {}
+
+    @Public()
     @Get('all')
     getAllProducts() {
         return this.productService.getAllProducts();
     }
 
+   
     @Get()
     getProduct(
         @GetUser('id') userId: string,
@@ -28,6 +31,7 @@ export class ProductController {
         );
     }
     
+    @Public()
     @Get(':id')
     async getProductById(
         @GetUser('id') userId: string,

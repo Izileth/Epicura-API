@@ -15,20 +15,25 @@ datasource db {
 }
 
 model User {
-  id                String    @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt         DateTime  @default(now()) @map("createdAt")
-  updatedAt         DateTime  @updatedAt @map("updatedAt")
-  email             String    @unique
-  hash              String
-  firstName         String?
-  lastName          String?
-  role              String    @default("USER")
-  isActive          Boolean   @default(true)
-  products          Product[]
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime  @default(now()) @map("createdAt")
+  updatedAt DateTime  @updatedAt @map("updatedAt")
+  email     String    @unique
+  hash      String
+  firstName String?
+  lastName  String?
+  role      String    @default("USER")
+  isActive  Boolean   @default(true)
+  products  Product[]
+
   resetToken        String?
   resetTokenExpires DateTime?
-  resetCode         String?   @db.String()
-  resetCodeExpires  DateTime?
+
+  resetCode        String?   @db.String()
+  resetCodeExpires DateTime?
+
+  refreshToken    String?
+  refreshTokenExp DateTime?
 
   carts  Cart[] // Relação inversa para Cart
   orders Order[] // Relação inversa para Order

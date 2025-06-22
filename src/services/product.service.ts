@@ -47,7 +47,6 @@ export class ProductService {
                         isActive: true,
                         createdAt: true,
                         updatedAt: true
-                        // Excluindo: hash, resetToken, resetTokenExpires
                     }
                 },
                 category: true
@@ -55,11 +54,11 @@ export class ProductService {
         })
     }
 
-    async getProductById(userId: string, productId: string) {
+    async getProductById(userId: string | undefined, productId: string) {
         console.log('Searching for product:', { userId, productId }); // Debug
         
         const product = await this.prisma.product.findUnique({
-            where:{
+            where: {
                 id: productId, // Remove a restrição de userId
             },
             include: {
@@ -85,9 +84,7 @@ export class ProductService {
 
         return product;
     }
-
-
-    
+        
     
     async createProduct(
         userId: string, 

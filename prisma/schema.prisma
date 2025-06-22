@@ -26,10 +26,15 @@ model User {
   role      String   @default("USER")
   isActive  Boolean  @default(true)
   products  Product[]
+
   resetToken      String?   
   resetTokenExpires DateTime?
+
   resetCode       String?   @db.String()
   resetCodeExpires DateTime?
+
+  refreshToken     String?  
+  refreshTokenExp  DateTime?
 
   carts     Cart[]    // Relação inversa para Cart
   orders    Order[]   // Relação inversa para Order

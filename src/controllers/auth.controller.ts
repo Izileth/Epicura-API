@@ -1,9 +1,13 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Res, ValidationPipe , ForbiddenException } from "@nestjs/common";
+import { Body, Controller, HttpCode, HttpStatus, Post, Res, ValidationPipe , ForbiddenException, Req } from "@nestjs/common";
 import { AuthDto, ResetPasswordDto, ForgotPasswordDto } from "src/dto";
 import { UsePipes } from "@nestjs/common";
 import { AuthService } from "src/services/auth.service";
 import { Response } from "express";
 import { ConfigService } from "@nestjs/config";
+
+
+import { RequestWithCookies } from "src/interfaces/request.interface";
+import { RefreshTokenDto } from "src/dto/refresh.token-dto";
 @Controller("auth")
 export class AuthController {
     constructor(
@@ -53,5 +57,15 @@ export class AuthController {
         token, // Token retornado diretamente (não fazer isso em produção!)
         resetLink: `${this.config.get('FRONTEND_URL')}/reset-password?token=${token}`,
         };
+    }
+
+    @Post('refresh')
+    @HttpCode(HttpStatus.OK)
+    async refresh(
+        @Req() req: RequestWithCookies,
+        @Res({ passthrough: true }) res: Response,
+        @Body() body: RefreshTokenDto
+        ) {
+        return this.authService.refreshTokens(req, res, body);
     }
 }
