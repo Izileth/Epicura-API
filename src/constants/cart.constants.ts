@@ -1,0 +1,1 @@
+export const CART_EXPIRATION_DAYS = 30; 
