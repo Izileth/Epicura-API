@@ -27,14 +27,20 @@ export class CartService {
     date.setDate(date.getDate() + CART_EXPIRATION_DAYS);
     return date;
   }
-
-
   
-  async getOrCreateCart(userId: string, sessionId?: string): Promise<any> {
-    const where = userId ? { userId, isActive: true } : { sessionId, isActive: true };
+  async getOrCreateCart(userId?: string, sessionId?: string): Promise<any> {
+    // Se userId é obrigatório no schema, usar sessionId como fallback
+    const effectiveUserId = userId || sessionId;
+    
+    if (!effectiveUserId) {
+      throw new Error('User ID or Session ID is required');
+    }
 
     let cart = await this.prisma.cart.findFirst({
-      where,
+      where: {
+        userId: effectiveUserId,
+        isActive: true
+      },
       include: {
         items: {
           include: {
@@ -46,27 +52,21 @@ export class CartService {
         createdAt: 'desc',
       },
     });
-    
-    if (userId === undefined) {
-        throw new Error('User ID is required');
-    }
-
 
     if (!cart) {
-        cart = await this.prisma.cart.create({
+      cart = await this.prisma.cart.create({
         data: {
-            userId,
-            sessionId: userId ? undefined : sessionId,
-            expiresAt: this.calculateExpirationDate(),
+          userId: effectiveUserId, // Sempre fornece um userId
+          expiresAt: this.calculateExpirationDate(),
         },
         include: {
-            items: {
+          items: {
             include: {
-                product: true,
+              product: true,
             },
-            },
+          },
         },
-        });
+      });
     }
 
     return this.formatCartResponse(cart);

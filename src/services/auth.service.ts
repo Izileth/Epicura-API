@@ -67,64 +67,56 @@ export class AuthService {
     }
 
     async signin(dto: AuthDto, res: Response) {
-        const user =
-            await this.prisma.user.findUnique({
-                where: { email: dto.email },
-            });
+        const user = await this.prisma.user.findUnique({
+            where: { email: dto.email },
+        });
 
         if (!user || !user.isActive) {
-            throw new UnauthorizedException(
-                'Credenciais inválidas',
-            );
+            throw new UnauthorizedException('Credenciais inválidas');
         }
 
-        if (!user)
-            throw new ForbiddenException(
-                'Credential Invalid!',
-            );
+        const pwMatches = await argon.verify(user.hash, dto.password);
+        if (!pwMatches) throw new ForbiddenException('Credencial Incorreta!');
 
-        const pwMatches = await argon.verify(
-            user.hash,
-            dto.password,
+        // Gerar um novo reset code para o usuário
+        const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+        const resetCodeExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutos
+
+        await this.prisma.user.update({
+            where: { id: user.id },
+            data: {
+                resetCode,
+                resetCodeExpires,
+                resetToken: null,
+                resetTokenExpires: null,
+            },
+        });
+
+        const { accessToken, refreshToken } = await this.generateTokens(
+            user.id,
+            user.email
         );
-        if (!pwMatches)
-            throw new ForbiddenException(
-                'Credencial Incorreta!',
-            );
-
-        const { accessToken, refreshToken } =
-            await this.generateTokens(
-                user.id,
-                user.email,
-            );
 
         res.cookie('access_token', accessToken, {
             httpOnly: true,
-            secure:
-                this.config.get('NODE_ENV') ===
-                'production',
+            secure: this.config.get('NODE_ENV') === 'production',
             sameSite: 'strict',
-            maxAge: 15 * 60 * 1000, // 15 minutos (access token)
+            maxAge: 15 * 60 * 1000, // 15 minutos
             path: '/',
         });
-        res.cookie(
-            'refresh_token',
-            refreshToken,
-            {
-                httpOnly: true,
-                secure:
-                    this.config.get(
-                        'NODE_ENV',
-                    ) === 'production',
-                sameSite: 'strict',
-                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias (refresh token)
-                path: '/auth/refresh', // Restringe a rota que pode usar o cookie
-            },
-        );
+
+        res.cookie('refresh_token', refreshToken, {
+            httpOnly: true,
+            secure: this.config.get('NODE_ENV') === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
+            path: '/auth/refresh',
+        });
 
         return {
             access_token: accessToken,
             refresh_token: refreshToken,
+            reset_code: resetCode, // Adicionando o reset code na resposta
             data: {
                 id: user.id,
                 email: user.email,
@@ -134,6 +126,8 @@ export class AuthService {
                 lastName: user.lastName,
                 role: user.role,
                 isActive: user.isActive,
+                reset_code: resetCode, // Adicionando o reset code na resposta
+
             },
         };
     }

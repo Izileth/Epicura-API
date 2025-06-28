@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
   Req,
+  Headers,
 } from '@nestjs/common';
 import { CartService } from 'src/services/cart.service';
 import { AddItemDto, UpdateItemDto, CartSessionDto, CartResponseDto } from 'src/dto';
@@ -24,12 +25,47 @@ export class CartController {
 
   @ApiOperation({ summary: 'Get or create cart' })
   @ApiResponse({ status: 200, description: 'Cart retrieved/created', type: CartResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(JwtGuard)
   @Get()
   async getOrCreateCart(
     @Req() req: RequestWithUser,
     @Query() cartSessionDto: CartSessionDto,
   ): Promise<CartResponseDto> {
-    return this.cartService.getOrCreateCart(req.user?.id, cartSessionDto.sessionId);
+    // Extrair user-id do header manualmente
+    const headerUserId = req.headers['user-id'] as string;
+    
+    // SOLUÇÃO TEMPORÁRIA: Decodificar JWT manualmente se req.user não estiver disponível
+    let userId = req.user?.id || headerUserId;
+    
+    if (!userId && req.headers.authorization) {
+      try {
+        const token = req.headers.authorization.replace('Bearer ', '');
+        // Decodificar o payload do JWT (apenas a parte do payload, sem verificar assinatura)
+        const base64Payload = token.split('.')[1];
+        const payload = JSON.parse(Buffer.from(base64Payload, 'base64').toString());
+        userId = payload.sub; // 'sub' é geralmente o user ID no JWT
+        console.log('JWT Payload decoded:', payload);
+      } catch (error) {
+        console.error('Error decoding JWT:', error);
+      }
+    }
+    
+    const sessionId = cartSessionDto.sessionId;
+
+    console.log('Debug - Final userId:', userId);
+    //console.log('Debug - sessionId:', sessionId);
+    console.log('Debug - req.user:', req.user);
+    //console.log('Debug - header user-id:', headerUserId);
+
+    // Se ainda não tiver userId, criar um sessionId temporário
+    if (!userId && !sessionId) {
+      const tempSessionId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      console.log('Creating temporary session ID:', tempSessionId);
+      return this.cartService.getOrCreateCart(undefined, tempSessionId);
+    }
+
+    return this.cartService.getOrCreateCart(userId, sessionId);
   }
 
   @ApiOperation({ summary: 'Add item to cart' })
