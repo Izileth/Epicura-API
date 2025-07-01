@@ -13,7 +13,7 @@ import { ProductService } from './services/product.service';
 import { CategoryModule } from './modules/category/category.module';
 import { CloudinaryModule } from './modules/clouldnary/clouldnary.module';
 import { JwtModule } from '@nestjs/jwt';
-import { TestController } from './test/test.controller';
+import { TestController } from './controllers/test.controller';
 @Module({
   imports: [AuthModule, UserModule, ProductsModule, PrismaModule, CategoryModule, CartModule, CloudinaryModule, JwtModule],
   controllers: [UserController, ProductController, CartController, TestController],
