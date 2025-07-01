@@ -18,21 +18,7 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'], // Headers permitidos
   });
 
-  app.get('/test', (req, res) => {
-    res.json({ 
-      message: 'API Working Correctly!',
-      endpoints: {
-        auth: '/auth',
-        users: '/user',
-        product: '/product',
-        cart: '/cart',
-        category: '/category',
-        resend: '/resend'
-      },  
-      environment: process.env.NODE_ENV,
-      allowedOrigins
-    });
-  });
+  
 
   await app.listen(process.env.PORT ?? 4141);
 }
